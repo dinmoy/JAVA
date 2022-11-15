@@ -51,6 +51,7 @@ public class Bank{
 
 		while(true) {
 			System.out.println("1.계좌생성  2.입금  3.출금  4.잔액조회  5.계좌전채조회  0.종료");
+			System.out.print("메뉴 입력 >");
 			int menu=sc.nextInt();
 			switch(menu) {
 			case 1:
@@ -83,7 +84,15 @@ public class Bank{
 				acc[foundAcc].withdraw(sc.nextInt());
 				break;
 			case 4:
-				//System.out.println(acc[i].toString());
+				System.out.print("계좌번호 입력 : ");
+				temp=sc.next();
+				for(int i=0;i<Account.cnt;i++) {
+					if(temp.equals(acc[i].getaccountNo())) {
+						foundAcc=i;
+						break;
+					}
+				}
+				System.out.println(acc[foundAcc].toString());
 				break;
 			case 5:
 				for(int i=0;i<Account.cnt;i++) {
@@ -91,8 +100,10 @@ public class Bank{
 				}
 				break;
 			case 0:
+				System.out.println("프로그램을 종료합니다");
 				return;
 			default:
+				System.out.println("메뉴 선택 오류입니다");
 
 			}
 		}
