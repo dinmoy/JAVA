@@ -2,15 +2,71 @@ package Score;
 
 import java.util.Scanner;
 
-public class student {
+class student {
 	String name_Num;
 	String name;
 	int[] subject;
 	double avg;
 	char result;
-	int rank;
+	int rank=1;
+
+	student(int subcnt){
+		this.subject=new int[subcnt+1];
+	}
+	void print() {
+		System.out.printf("%4s %6s ",name_Num, name);
+		for(int j = 0; j < subject.length; j++)
+			System.out.printf("%7d ", subject[j]);
+		System.out.printf(" %9.2f %4c %4d\n", avg, result, rank);
+	}
 	
+	void input(int i,String[] sub_name) {
+		Scanner sc = new Scanner(System.in);
+		System.out.println((i+1) + "번째 학생 입력");
+		System.out.print("학번 : ");
+		name_Num = sc.next();
+		System.out.print("이름 : ");
+		name = sc.next();
+
+		for(int j = 0; j < subject.length-1; j++) {
+			do {
+				System.out.print(sub_name[j] + " : ");
+				subject[j] = sc.nextInt();
+			} while(subject[j] < 0 || subject[j] > 100);
+		}
+	}
 	
+	void calcul() {
+		int sub=subject.length-1;
+		
+		for(int j = 0; j < sub; j++) 
+			subject[sub] +=subject[j];
+		avg = (double)subject[sub] / sub;
+		
+
+		switch((int)avg / 10) {
+		case 10 : case 9 : 
+			result ='A'; 
+			break;
+		case 8 : 
+			result ='B';
+			break;
+		case 7 : 
+			result ='C';
+			break;
+		case 6 :
+			result ='D';
+			break;
+		default : 
+			result = 'E';
+		}
+	}
+	void ranking(student[] stu) {
+		for(int j = 0; j < stu.length; j++) {
+			if(subject[subject.length-1] < stu[j].subject[subject.length-1]) rank++;
+		}
+	}
+
 }
 
 public class Score {
@@ -20,61 +76,20 @@ public class Score {
 		int stu_num = sc.nextInt();
 		System.out.print("몇 과목을 입력하시겠습니까 : ");
 		int sub = sc.nextInt();
-		
+
 		student[] stu = new student[stu_num];
-		
-		
-		for(int i = 0; i < stu_num; i++) stu[i].rank = 1;
-		
+		for(int i = 0; i < stu_num; i++) stu[i]=new student(sub);
+
 		String[] sub_name = {"국어", "영어", "수학", "자바", "C", "과학", "사회", "기가", "한국사", "일본어"};
-		for(int i = 0; i < stu_num; i++) {
-			System.out.println((i+1) + "번째 학생 입력");
-			System.out.print("학번 : ");
-			stu[i].name_Num = sc.next();
-			System.out.print("이름 : ");
-			stu[i].name = sc.next();
-
-			for(int j = 0; j < stu[i].subject.length - 1; j++) {
-				do {
-					System.out.print(sub_name[j] + " : ");
-					stu[i].subject[j] = sc.nextInt();
-				} while(stu[i].subject[j] < 0 || stu[i].subject[j] > 100);
-
-				stu[i].subject[sub] += stu[i].subject[j];
-			}
-			
-			stu[i].avg = (double)stu[i].subject[sub] / sub;
-
-			switch((int)stu[i].avg / 10) {
-			case 10 : case 9 : 
-				stu[i].result ='A'; 
-				break;
-			case 8 : 
-				stu[i].result ='B';
-				break;
-			case 7 : 
-				stu[i].result ='C';
-				break;
-			case 6 :
-				stu[i].result ='D';
-				break;
-			default : 
-				stu[i].result = 'E';
-			}
-		}
 		
-		for(int i = 0; i < stu[i].subject.length; i++) {
-			for(int j = i+1; j < stu_num; j++) {
-				if(stu[i].subject[sub] < stu[i].subject[sub]) stu[i].rank++;
-				else if(stu[i].subject[sub] > stu[i].subject[sub]) stu[j].rank++;
-			}
+		for(int i = 0; i < stu_num; i++) {
+			stu[i].input(i,sub_name);
+			stu[i].calcul();
 		}
 
-		for(int i = 0; i < stu_num; i++) {
-			System.out.printf("%4s %6s ",stu[i].name_Num, stu[i].name);
-			for(int j = 0; j < stu[i].subject.length; j++)
-				System.out.printf("%7d ", stu[i].subject[j]);
-			System.out.printf(" %9.2f %4c %4d\n", stu[i].avg, stu[i].result, stu[i].rank);
-		}
+		for(int i = 0; i < stu_num; i++) stu[i].ranking(stu);//stu[i]의 순위 결정
+		
+		for(int i = 0; i < stu_num; i++) stu[i].print(); //출력
+
 	}
 }
